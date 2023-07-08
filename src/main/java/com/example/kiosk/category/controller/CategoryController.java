@@ -3,22 +3,22 @@ package com.example.kiosk.category.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.kiosk.category.controller.response.CategoryResponse;
 import com.example.kiosk.category.service.port.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping("/api")
-@Controller
+@RequestMapping("/api/categories")
+@RestController
 @RequiredArgsConstructor
 public class CategoryController {
 	private final CategoryService categoryService;
 
-	@GetMapping("/categories")
+	@GetMapping
 	public ResponseEntity<List<CategoryResponse>> getCategories() {
 		return ResponseEntity
 			.ok()
