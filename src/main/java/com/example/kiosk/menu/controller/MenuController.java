@@ -28,4 +28,11 @@ public class MenuController {
 				.toList()
 		);
 	}
+
+	@GetMapping("/{menuId}")
+	public ResponseEntity<MenuResponse> getMenuByMenuId(@PathVariable int categoryId, @PathVariable int menuId) {
+		return ResponseEntity.ok().body(
+			MenuResponse.from(menuService.getMenuById(categoryId, menuId))
+		);
+	}
 }

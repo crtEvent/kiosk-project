@@ -1,7 +1,9 @@
 package com.example.kiosk.menu.repository.jdbctemplate;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +20,25 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MenuJdbcRepositoryImpl implements MenuRepository {
 	private final NamedParameterJdbcTemplate jdbcTemplate;
+
+	@Override
+	public Optional<Menu> findById(int categoryId, int menuId) {
+		String sql = "SELECT id, name, price, image_path, description, category_id "
+			+ "FROM menu "
+			+ "WHERE category_id = :categoryId AND id = :menuId";
+
+		SqlParameterSource param = new MapSqlParameterSource()
+			.addValue("categoryId", categoryId)
+			.addValue("menuId", menuId);
+
+		try {
+			return Optional.ofNullable(
+				jdbcTemplate.queryForObject(sql, param, getMenuRowMapper())
+			).map(MenuEntity::toDomain);
+		} catch (EmptyResultDataAccessException e) {
+			return Optional.empty();
+		}
+	}
 
 	@Override
 	public List<Menu> findAllByCategoryId(int categoryId) {
